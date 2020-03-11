@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export function fetchSetData(setId) {
   let setPromise = fetchSet(setId);
   let cardsPromise = fetchCards(setId);
@@ -41,17 +43,15 @@ function wrapPromise(promise) {
 
 export function fetchSet(setId) {
   console.log(`fetching set details for ${setId}`);
-  return fetch(`https://api.magicthegathering.io/v1/sets/${setId}`)
-    .then(res => res.json())
-    .then(data => data.set)
+  return axios.get(`https://api.magicthegathering.io/v1/sets/${setId}`)
+    .then(res => res.data.set)
     .catch(err => console.log('error - ', err));
 }
 
 
 export function fetchCards(setId) {
   console.log(`fetching cards for ${setId}`);
-  return fetch(`https://api.magicthegathering.io/v1/sets/${setId}/booster`)
-    .then(res => res.json())
-    .then(data => data.cards)
+  return axios.get(`https://api.magicthegathering.io/v1/sets/${setId}/booster`)
+    .then(res => res.data.cards)
     .catch(err => console.log('error - ', err));
 }
