@@ -2,6 +2,23 @@ import React, { useState, Suspense } from "react";
 import './App.css';
 import { fetchSetData } from "./api";
 
+// Error boundaries currently have to be classes.
+class ErrorBoundary extends React.Component {
+  state = { hasError: false, error: null };
+  static getDerivedStateFromError(error) {
+    return {
+      hasError: true,
+      error
+    };
+  }
+  render() {
+    if (this.state.hasError) {
+      return this.props.fallback;
+    }
+    return this.props.children;
+  }
+}
+
 function getRandomSetId() {
   const sets = ['eld', 'dom', 'uma', 'ice', 'tmp']
   return sets[Math.floor(Math.random() * Math.floor(4))]
@@ -32,6 +49,7 @@ function App() {
 function MagicSetPage({ resource }) {
   return (
     <>
+    <ErrorBoundary fallback={<h2>Error fetching.</h2>}>
       <Suspense
         fallback={<h2>Loading set...</h2>}
       >
@@ -42,6 +60,7 @@ function MagicSetPage({ resource }) {
       >
         <ExampleBooster resource={resource} />
       </Suspense>
+      </ErrorBoundary>
     </>
   );
 }
