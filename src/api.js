@@ -20,7 +20,7 @@ function wrapPromise(promise) {
   let result;
   let suspender = promise.then(
     res => {
-      status = res && !res.error ? "success" : "error";
+      status = "success";
       result = res;
     },
     error => {
@@ -44,14 +44,20 @@ function wrapPromise(promise) {
 export function fetchSet(setId) {
   console.log(`fetching set details for ${setId}`);
   return axios.get(`https://api.magicthegathering.io/v1/sets/${setId}`)
-    .then(res => res.data.set)
-    .catch(err => console.log('error - ', err));
+    .then(res => {
+      if (res.status > 299 || res.status < 200) throw res.statusText;
+      return res.data.set
+    })
+    .catch(err => Promise.reject(err));
 }
 
 
 export function fetchCards(setId) {
   console.log(`fetching cards for ${setId}`);
   return axios.get(`https://api.magicthegathering.io/v1/sets/${setId}/booster`)
-    .then(res => res.data.cards)
-    .catch(err => console.log('error - ', err));
+    .then(res => {
+      if (res.status > 299 || res.status < 200) throw res.statusText;
+      return res.data.cards
+    })
+    .catch(err => Promise.reject(err));
 }

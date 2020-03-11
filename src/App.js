@@ -98,9 +98,7 @@ function ExampleBooster({ resource }) {
   return (
     <div>
       {cards.map(card => (
-        card.imageUrl
-        ? <img key={card.id} src={card.imageUrl} alt={card.name} style={{ height: '200px', margin: '10px'}}/>
-        : <div style={{ width: '143px', height: '200px', display: 'inline-block', border: `1px solid`, borderRadius: '3px'}}><p key={card.id}>No image provided for {card.name}</p></div>
+        card.imageUrl && <img key={card.id} src={card.imageUrl} alt={card.name} style={{ height: '300px', margin: '10px'}}/>
       ))}
     </div>
   );
