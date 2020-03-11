@@ -20,7 +20,7 @@ class ErrorBoundary extends React.Component {
 }
 
 function getRandomSetId() {
-  const sets = ['eld', 'dom', 'uma', 'ice', 'tmp']
+  const sets = ['eld', 'dom', 'uma', 'ice', 'tmp', 'isd', 'rna']
   return sets[Math.floor(Math.random() * Math.floor(4))]
 }
 
@@ -49,12 +49,14 @@ function App() {
 function MagicSetPage({ resource }) {
   return (
     <>
-    <ErrorBoundary fallback={<h2>Error fetching.</h2>}>
+    <ErrorBoundary fallback={<h2>Error fetching set.</h2>}>
       <Suspense
         fallback={<h2>Loading set...</h2>}
       >
         <SetDetails resource={resource} />
       </Suspense>
+    </ErrorBoundary>
+    <ErrorBoundary fallback={<h2>Error fetching cards.</h2>}>
       <Suspense
         fallback={<h2>Loading cards...</h2>}
       >
@@ -66,16 +68,21 @@ function MagicSetPage({ resource }) {
 }
 
 function SetDetails({ resource }) {
-  const setData = resource.set.read();
-  return <h1>{setData.set.name}</h1>;
+  const set = resource.set.read();
+  return (
+  <>
+  <h2>Set Name: {set.name}</h2>
+  <h3>Release Date: {set.releaseDate}</h3>
+  </>
+  );
 }
 
 function ExampleBooster({ resource }) {
-  const cardsData = resource.cards.read();
+  const cards = resource.cards.read();
   return (
     <ul>
-      {cardsData.cards.map(card => (
-        <img src={card.imageUrl} alt={card.name} />
+      {cards.map(card => (
+        <img key={card.id} src={card.imageUrl} alt={card.name} style={{ height: '200px', margin: '10px'}}/>
       ))}
     </ul>
   );

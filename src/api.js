@@ -11,14 +11,14 @@ export function fetchSetData(setId) {
 // Suspense integrations like Relay implement
 // a contract like this to integrate with React.
 // Real implementations can be significantly more complex.
-// Don't copy-paste this into your project!
+// Don't copy-paste this into your project, use a data
+// fetching library that integrates with Suspense
 function wrapPromise(promise) {
   let status = "pending";
   let result;
   let suspender = promise.then(
     res => {
-      console.log('res --- ', res);
-      status = "success";
+      status = res && !res.error ? "success" : "error";
       result = res;
     },
     error => {
@@ -43,6 +43,7 @@ export function fetchSet(setId) {
   console.log(`fetching set details for ${setId}`);
   return fetch(`https://api.magicthegathering.io/v1/sets/${setId}`)
     .then(res => res.json())
+    .then(data => data.set)
     .catch(err => console.log('error - ', err));
 }
 
@@ -51,5 +52,6 @@ export function fetchCards(setId) {
   console.log(`fetching cards for ${setId}`);
   return fetch(`https://api.magicthegathering.io/v1/sets/${setId}/booster`)
     .then(res => res.json())
+    .then(data => data.cards)
     .catch(err => console.log('error - ', err));
 }
